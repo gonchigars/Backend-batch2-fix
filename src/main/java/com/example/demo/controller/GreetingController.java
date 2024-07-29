@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.exception.GreetingException;
 import com.example.demo.model.Greeting;
 import com.example.demo.service.GreetingService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,7 +31,26 @@ public class GreetingController {
 
     @GetMapping("/{id}")
     public ResponseEntity<Greeting> getGreetingById(@PathVariable Long id) {
-        return greetingService.getGreetingById(id)
+        System.out.println("Fetching greeting with ID: " + id); // Debugging
+        ResponseEntity<Greeting> response = greetingService.getGreetingById(id)
+                .map(greeting -> {
+                    System.out.println("Greeting found: " + greeting); // Debugging
+                    return new ResponseEntity<>(greeting, HttpStatus.OK);
+                })
+                .orElseGet(() -> {
+                    System.out.println("Greeting not found with ID: " + id); // Debugging
+                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+                });
+        System.out.println("Response: " + response); // Debugging
+        return response;
+    }
+
+    @GetMapping("/search")
+    public ResponseEntity<Greeting> getGreetingByName(@RequestParam(value = "name") String name) {
+        if (name.isEmpty()) {
+            throw new GreetingException("Name cannot be empty");
+        }
+        return greetingService.getGreetingByName(name)
                 .map(greeting -> new ResponseEntity<>(greeting, HttpStatus.OK))
                 .orElse(new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }

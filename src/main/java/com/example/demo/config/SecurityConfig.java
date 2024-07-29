@@ -20,7 +20,7 @@ public class SecurityConfig {
             .csrf().disable()
             .authorizeRequests()
                 .antMatchers("/api/v1/greetings").permitAll()
-                .antMatchers("/api/v1/greetings/**").authenticated()
+                .antMatchers("/api/v1/greetings/**").permitAll()
             .and()
             .httpBasic();
         return http.build();

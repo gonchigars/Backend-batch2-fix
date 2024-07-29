@@ -22,13 +22,20 @@ public class GreetingService {
         return repository.save(greeting);
     }
 
+    public Optional<Greeting> getGreetingByName(String name) {
+        return repository.findByName(name);
+    }
     public List<Greeting> getAllGreetings() {
         return repository.findAll();
     }
 
     public Optional<Greeting> getGreetingById(Long id) {
-        return repository.findById(id);
+        System.out.println("Service - Fetching greeting with ID: " + id); // Debugging
+        Optional<Greeting> greeting = repository.findById(id);
+        System.out.println("Service - Greeting found: " + greeting.isPresent()); // Debugging
+        return greeting;
     }
+    
 
     public Optional<Greeting> updateGreeting(Long id, Greeting greetingDetails) {
         return repository.findById(id)
