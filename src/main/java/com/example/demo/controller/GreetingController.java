@@ -32,17 +32,9 @@ public class GreetingController {
     @GetMapping("/{id}")
     public ResponseEntity<Greeting> getGreetingById(@PathVariable Long id) {
         System.out.println("Fetching greeting with ID: " + id); // Debugging
-        ResponseEntity<Greeting> response = greetingService.getGreetingById(id)
-                .map(greeting -> {
-                    System.out.println("Greeting found: " + greeting); // Debugging
-                    return new ResponseEntity<>(greeting, HttpStatus.OK);
-                })
-                .orElseGet(() -> {
-                    System.out.println("Greeting not found with ID: " + id); // Debugging
-                    return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-                });
-        System.out.println("Response: " + response); // Debugging
-        return response;
+        Greeting greeting = greetingService.findGreetingById(id);
+        System.out.println("Greeting found: " + greeting); // Debugging
+        return new ResponseEntity<>(greeting, HttpStatus.OK);
     }
 
     @GetMapping("/search")
@@ -69,5 +61,9 @@ public class GreetingController {
         } else {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+    }
+    @GetMapping("/error")
+    public ResponseEntity<String> triggerError() {
+        throw new RuntimeException("Internal server error");
     }
 }

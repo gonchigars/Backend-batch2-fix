@@ -28,6 +28,10 @@ public class GreetingService {
     public List<Greeting> getAllGreetings() {
         return repository.findAll();
     }
+    public Greeting findGreetingById(Long id) {
+        return repository.findById(id)
+                .orElseThrow(() -> new GreetingException("Greeting not found with id: " + id));
+    }
 
     public Optional<Greeting> getGreetingById(Long id) {
         System.out.println("Service - Fetching greeting with ID: " + id); // Debugging
